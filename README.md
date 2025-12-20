@@ -17,13 +17,12 @@ A personalized fitness and nutrition assistant powered by AI.
 
 ## Getting Started
 1. Clone the repository
-2. Install dependencies with \
-pm install\`n3. Add your Gemini API key to the environment variables
-4. Run the development server with \
-pm run dev\`n
+2. Install dependencies with `npm install`
+3. Copy `.env.example` to `.env.local` and add your Gemini API key
+4. Run the development server with `npm run dev`
 ## Usage
-1. Sign up or log in to the application
-2. Enter your personal details and fitness goals
-3. Calculate your nutrition requirements
-4. Generate personalized workout plans
-5. Use the AI chat assistant for fitness guidance
+
+1. Enter your personal details and fitness goals
+2. Calculate your nutrition requirements
+3. Generate personalized workout plans
+4. Use the AI chat assistant for fitness guidance
