@@ -1,8 +1,8 @@
 import { NextRequest } from 'next/server';
 
-const API_KEY = "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";
-const API_URL = "https://openrouter.ai/api/v1/chat/completions";
-const MODEL = "meituan/longcat-flash-chat:free";
+const API_KEY = "AIzaSyDtmzoS8JRrqhC7YY3FJf_f2_OaITjn5rc";
+const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+const MODEL = "gemini-pro";
 
 // Add interface for results data
 interface ResultsData {
@@ -173,35 +173,28 @@ Results Data:
 Provide specific, actionable advice. Keep response between 80-140 words. No disclaimers.`;
     }
 
-    // Prepare headers for OpenRouter API
+    // Prepare headers for Gemini API
     const headers = {
-      'Authorization': `Bearer ${API_KEY}`,
       'Content-Type': 'application/json',
-      'HTTP-Referer': 'http://localhost:6179', // Optional, for analytics
-      'X-Title': 'MyFitnessAI', // Optional, for analytics
     };
 
-    // Prepare data for OpenRouter API
+    // Prepare data for Gemini API
     const data = {
-      model: MODEL,
-      messages: [
-        { 
-          role: "system", 
-          content: "You are a professional fitness coach. Provide structured, actionable fitness advice. Always format workout plans with clear sections. Keep responses concise and professional." 
-        },
-        { 
-          role: "user", 
-          content: prompt 
-        }
-      ],
+      contents: [{
+        parts: [{
+          text: `You are a professional fitness coach. Provide structured, actionable fitness advice. Always format workout plans with clear sections. Keep responses concise and professional.\n\n${prompt}`
+        }]
+      }],
       // Add parameters to improve response quality
-      temperature: 0.7,
-      max_tokens: 300,
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 300,
+      }
     };
 
-    console.log('Making request to OpenRouter API...');
+    console.log('Making request to Gemini API...');
     
-    const response = await fetch(API_URL, {
+    const response = await fetch(`${API_URL}?key=${API_KEY}`, {
       method: 'POST',
       headers: headers,
       body: JSON.stringify(data),
@@ -209,7 +202,7 @@ Provide specific, actionable advice. Keep response between 80-140 words. No disc
       signal: AbortSignal.timeout(30000) // 30 second timeout
     });
 
-    console.log('OpenRouter API response status:', response.status);
+    console.log('Gemini API response status:', response.status);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -220,7 +213,7 @@ Provide specific, actionable advice. Keep response between 80-140 words. No disc
       let errorDetails = errorText;
       let statusCode = response.status;
       
-      if (response.status === 429 || errorText.includes('rate-limited')) {
+      if (response.status === 429 || errorText.includes('rate-limited') || errorText.includes('quota')) {
         errorMessage = 'Rate limit exceeded';
         errorDetails = 'The AI service is temporarily busy. Please wait a moment and try again.';
         statusCode = 429;
@@ -240,9 +233,9 @@ Provide specific, actionable advice. Keep response between 80-140 words. No disc
     }
 
     const result = await response.json();
-    console.log('OpenRouter API response received');
+    console.log('Gemini API response received');
     
-    if (!result.choices || result.choices.length === 0) {
+    if (!result.candidates || result.candidates.length === 0 || !result.candidates[0].content) {
       return new Response(
         JSON.stringify({ error: 'No response generated' }),
         { 
@@ -252,7 +245,7 @@ Provide specific, actionable advice. Keep response between 80-140 words. No disc
       );
     }
 
-    const aiResponse = result.choices[0].message.content;
+    const aiResponse = result.candidates[0].content.parts[0].text;
     
     return new Response(
       JSON.stringify({ response: aiResponse }),
