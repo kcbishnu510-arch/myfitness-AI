@@ -231,7 +231,18 @@ const InputForm: React.FC<InputFormProps> = ({ onResults, onUserDetailsUpdate, i
         <h2 className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-gray-900 to-blue-700 bg-clip-text text-transparent mb-1 xs:mb-2">
           Your Fitness Profile
         </h2>
-        <p className="text-gray-600 text-xs sm:text-sm md:text-base">Enter your details to get personalized recommendations</p>
+        <p className="text-gray-600 text-xs sm:text-sm md:text-base">Enter your details to get personalized nutrition recommendations</p>
+        
+        {/* Progress indicator */}
+        <div className="mt-4 max-w-md mx-auto">
+          <div className="flex justify-between mb-1">
+            <span className="text-xs font-medium text-blue-600">Getting Started</span>
+            <span className="text-xs font-medium text-gray-500">Results</span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full" style={{ width: '50%' }}></div>
+          </div>
+        </div>
       </div>
       
       <form onSubmit={handleSubmit} className="space-y-3 xs:space-y-4 sm:space-y-5 md:space-y-6">

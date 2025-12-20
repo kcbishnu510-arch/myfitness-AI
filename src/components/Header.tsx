@@ -4,12 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useUser } from '@/context/UserContext';
 
-interface HeaderProps {
-  onShowLogin?: () => void;
-  onShowSignup?: () => void;
-}
-
-const Header: React.FC<HeaderProps> = ({ onShowLogin, onShowSignup }) => {
+const Header: React.FC = () => {
   const { user, logout } = useUser();
 
   return (
@@ -56,44 +51,7 @@ const Header: React.FC<HeaderProps> = ({ onShowLogin, onShowSignup }) => {
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full rounded-full"></span>
                 </a>
               </li>
-              {user ? (
-                <li>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-gray-700 text-xs xs:text-sm sm:text-base">
-                      Hi, {user.name}
-                    </span>
-                    <button
-                      onClick={logout}
-                      className="text-gray-700 hover:text-blue-600 transition-colors duration-300 font-medium relative group py-2 text-xs xs:text-sm sm:text-base"
-                    >
-                      Logout
-                    </button>
-                  </div>
-                </li>
-              ) : (
-                <>
-                  {onShowLogin && (
-                    <li>
-                      <button
-                        onClick={onShowLogin}
-                        className="text-gray-700 hover:text-blue-600 transition-colors duration-300 font-medium relative group py-2 text-xs xs:text-sm sm:text-base"
-                      >
-                        Login
-                      </button>
-                    </li>
-                  )}
-                  {onShowSignup && (
-                    <li>
-                      <button
-                        onClick={onShowSignup}
-                        className="text-gray-700 hover:text-blue-600 transition-colors duration-300 font-medium relative group py-2 text-xs xs:text-sm sm:text-base"
-                      >
-                        Sign Up
-                      </button>
-                    </li>
-                  )}
-                </>
-              )}
+
             </ul>
             {/* Mobile menu button for smaller screens */}
             <button className="xs:hidden tap-target text-gray-700">

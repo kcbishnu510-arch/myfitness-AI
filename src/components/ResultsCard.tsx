@@ -34,6 +34,25 @@ const ResultsCard: React.FC<ResultsCardProps> = ({
           Your Personalized Results
         </h2>
         <p className="text-gray-600 text-sm xs:text-base md:text-lg">Based on your profile and goals</p>
+        
+        {/* Completion badge */}
+        <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 mt-3">
+          <svg className="mr-1.5 h-3 w-3 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+          Calculation Complete
+        </div>
+        
+        {/* Progress indicator */}
+        <div className="mt-4 max-w-md mx-auto">
+          <div className="flex justify-between mb-1">
+            <span className="text-xs font-medium text-blue-600">Getting Started</span>
+            <span className="text-xs font-medium text-green-600">Results</span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full" style={{ width: '100%' }}></div>
+          </div>
+        </div>
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 xs:gap-3 sm:gap-4 mb-5 xs:mb-6 sm:mb-8">

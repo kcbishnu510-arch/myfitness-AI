@@ -42,7 +42,6 @@ interface ChatWidgetProps {
 }
 
 const ChatWidget: React.FC<ChatWidgetProps> = ({ userDetails, results, isVisible }) => {
-  const { user } = useUser(); // Get user from context
   const [isOpen, setIsOpen] = useState(true); // Start open by default
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -163,15 +162,15 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ userDetails, results, isVisible
       
       // Create user profile block for the prompt
       let userProfileBlock = '';
-      if (user) {
+      if (userDetails) {
         userProfileBlock = `
 User Profile:
-Age: ${user.age}
-Weight: ${user.weight} ${user.weightUnit}
-Height: ${user.heightUnit === 'cm' ? `${user.heightCm} cm` : `${user.heightFeet}'${user.heightInches}"`}
-Sex: ${user.sex}
-Activity Level: ${user.activityLevel}
-Goal: ${user.goal}
+Age: ${userDetails.age}
+Weight: ${userDetails.weight} ${userDetails.weightUnit}
+Height: ${userDetails.heightUnit === 'cm' ? `${userDetails.heightCm} cm` : `${userDetails.heightFeet}'${userDetails.heightInches}"`}
+Sex: ${userDetails.sex}
+Activity Level: ${userDetails.activityLevel}
+Goal: ${userDetails.goal}
 `;
         
         // Add macro information if available
@@ -323,9 +322,16 @@ Carbs: ${results.carbs.min}-${results.carbs.max}g
       {/* Chat Header - More prominent with clear text */}
       <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-t-2xl p-3 xs:p-4 md:p-5 text-white">
         <div className="flex items-center justify-between">
-          <div>
-            <h3 className="font-bold text-base xs:text-lg md:text-xl">Fitness AI Assistant</h3>
-            <p className="text-xs xs:text-sm text-white text-opacity-90">Ask me about workouts, nutrition, or fitness...</p>
+          <div className="flex items-center">
+            <div className="w-8 h-8 xs:w-10 xs:h-10 rounded-full bg-white/20 flex items-center justify-center mr-3">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 xs:h-5 xs:w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+            </div>
+            <div>
+              <h3 className="font-bold text-base xs:text-lg md:text-xl">Fitness AI Assistant</h3>
+              <p className="text-xs xs:text-sm text-white text-opacity-90">Ask me about workouts, nutrition, or fitness...</p>
+            </div>
           </div>
           <motion.button
             onClick={toggleChat}

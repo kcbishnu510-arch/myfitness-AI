@@ -41,8 +41,6 @@ interface QuickTip {
 export default function Home() {
   const { user, updateUser } = useUser();
   const [showResults, setShowResults] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
-  const [showSignup, setShowSignup] = useState(false);
   const [results, setResults] = useState<ResultsData | null>(null);
   const [userDetails, setUserDetails] = useState<UserDetails>({ // Add user details state
     weight: '',
@@ -57,24 +55,6 @@ export default function Home() {
     goal: ''
   });
   const [quickTips, setQuickTips] = useState<QuickTip[]>([]); // Add quick tips state
-
-  // Load user data into form if available
-  useEffect(() => {
-    if (user) {
-      setUserDetails({
-        weight: user.weight,
-        weightUnit: user.weightUnit,
-        heightFeet: user.heightFeet,
-        heightInches: user.heightInches,
-        heightCm: user.heightCm,
-        heightUnit: user.heightUnit,
-        age: user.age,
-        sex: user.sex,
-        activityLevel: user.activityLevel,
-        goal: user.goal
-      });
-    }
-  }, [user]);
 
   const handleResults = (resultsData: ResultsData) => {
     setResults(resultsData);
@@ -112,36 +92,14 @@ export default function Home() {
     setQuickTips(shuffled.slice(0, 3));
   };
 
-  // Handle login completion
-  const handleLoginComplete = () => {
-    setShowLogin(false);
-  };
-
-  // Handle signup completion
-  const handleSignupComplete = () => {
-    setShowSignup(false);
-  };
-
-  // Show login form
-  const showLoginForm = () => {
-    setShowLogin(true);
-    setShowSignup(false);
-  };
-
   // Show signup form
   const showSignupForm = () => {
-    setShowSignup(true);
-    setShowLogin(false);
+    // No-op since we're removing login requirement
   };
-
-  // Determine what to show based on user state
-  const shouldShowAuthForms = !user && !showResults && !showLogin && !showSignup;
-  const shouldShowLogin = showLogin && !user;
-  const shouldShowSignup = showSignup && !user;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 text-gray-900">
-      <Header onShowLogin={showLoginForm} onShowSignup={showSignupForm} />
+      <Header />
       
       <main className="container mx-auto px-3 xs:px-4 py-4 xs:py-6 md:py-8">
         <motion.div
@@ -168,38 +126,53 @@ export default function Home() {
             Your smart assistant for calories, macros & personalized workouts
           </motion.p>
           
+          {/* Welcome message for first-time visitors */}
+          <motion.div 
+            className="bg-white/80 backdrop-blur-xl rounded-2xl xs:rounded-3xl p-4 xs:p-5 sm:p-6 md:p-8 shadow-xl border border-white/50 max-w-3xl mx-auto mb-8 xs:mb-10 md:mb-16 hover-lift"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+            whileHover={{ y: -5 }}
+          >
+            <h2 className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-3 xs:mb-4">Welcome to MyFitnessAI!</h2>
+            <p className="text-gray-700 text-sm xs:text-base md:text-lg mb-4">
+              Get personalized nutrition recommendations and AI-powered workout plans tailored to your goals.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 xs:gap-4">
+              <div className="flex items-center justify-center p-2 xs:p-3 bg-blue-50 rounded-lg xs:rounded-xl">
+                <div className="w-8 h-8 xs:w-10 xs:h-10 rounded-full bg-blue-500 flex items-center justify-center mr-2 xs:mr-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 xs:h-5 xs:w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </div>
+                <span className="text-xs xs:text-sm font-medium text-gray-800">No Account Needed</span>
+              </div>
+              <div className="flex items-center justify-center p-2 xs:p-3 bg-green-50 rounded-lg xs:rounded-xl">
+                <div className="w-8 h-8 xs:w-10 xs:h-10 rounded-full bg-green-500 flex items-center justify-center mr-2 xs:mr-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 xs:h-5 xs:w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <span className="text-xs xs:text-sm font-medium text-gray-800">Instant Results</span>
+              </div>
+              <div className="flex items-center justify-center p-2 xs:p-3 bg-purple-50 rounded-lg xs:rounded-xl">
+                <div className="w-8 h-8 xs:w-10 xs:h-10 rounded-full bg-purple-500 flex items-center justify-center mr-2 xs:mr-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 xs:h-5 xs:w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                </div>
+                <span className="text-xs xs:text-sm font-medium text-gray-800">AI-Powered</span>
+              </div>
+            </div>
+          </motion.div>
+          
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.5 }}
           >
-            {/* Show login form if user is not logged in and login is requested */}
-            {shouldShowLogin && (
-              <Login 
-                onLoginComplete={handleLoginComplete} 
-                onShowSignup={showSignupForm} 
-              />
-            )}
-            
-            {/* Show signup form if user is not logged in and signup is requested */}
-            {shouldShowSignup && (
-              <Signup 
-                onSignupComplete={handleSignupComplete} 
-                initialFitnessData={userDetails}
-              />
-            )}
-            
-            {/* Show auth forms by default if no user and no results */}
-            {shouldShowAuthForms && (
-              <Login 
-                onLoginComplete={handleLoginComplete} 
-                onShowSignup={showSignupForm} 
-              />
-            )}
-            
-            {/* Show main app content if user is logged in or showing results */}
-            {(user || showResults) && (
-              <>
+            {/* Always show the main app content */}
+            <>
                 {!showResults ? (
                   <InputForm 
                     onResults={handleResults} 
@@ -257,15 +230,6 @@ export default function Home() {
                   )
                 )}
               </>
-            )}
-            
-            {/* Fallback: Always show login if nothing else is shown */}
-            {!user && !showResults && !shouldShowAuthForms && !shouldShowLogin && !shouldShowSignup && (
-              <Login 
-                onLoginComplete={handleLoginComplete} 
-                onShowSignup={showSignupForm} 
-              />
-            )}
           </motion.div>
         </motion.div>
       </main>
